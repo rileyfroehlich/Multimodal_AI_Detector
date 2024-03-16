@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload File</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <h1>Upload File</h1>
+    <form id="uploadForm" method="post" enctype="multipart/form-data" action="/upload/">
+        <label for="file">Choose file:</label>
+        <input type="file" id="file" name="file" accept=".txt, .pdf, .docx, .jpg, .jpeg, .png, .heic, .mp3, .wav, .m4a, .flac">
+        <br>
+        <div id="error-message" style="color: red; display: none;">Invalid file type. Please choose a valid file type.</div>
+        <button type="submit">Upload</button>
+    </form>
+
+    <script>
+        const fileInput = document.getElementById('file');
+        const errorMessage = document.getElementById('error-message');
+        const uploadForm = document.getElementById('uploadForm');
+
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            const allowedTypes = ['txt', 'pdf', 'docx', 'jpg', 'jpeg', 'png', 'heic', 'mp3', 'wav', 'm4a', 'flac'];
+
+            if (file && !allowedTypes.includes(file.name.split('.').pop().toLowerCase())) {
+                errorMessage.style.display = 'block';
+                uploadForm.onsubmit = () => false; // Prevent form submission
+            } else {
+                errorMessage.style.display = 'none';
+                uploadForm.onsubmit = () => true; // Allow form submission
+            }
+        });
+    </script>
+</body>
+</html>
