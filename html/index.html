@@ -9,35 +9,59 @@
 </head>
 <body>
     {% include "header.html" %}
+
     <div class="container">
         <h1>Please Upload a File</h1>
-        <form id="uploadForm" method="post" enctype="multipart/form-data" action="/upload/">
-            <label for="file">Choose file:</label>
-            <input type="file" id="file" name="file" accept=".txt, .pdf, .docx, .jpg, .jpeg, .png, .heic, .mp3, .wav, .m4a, .flac">
+        <form id="uploadForm" method="post" enctype="multipart/form-data" action="/upload/" onsubmit="return validateFileUpload()">
+            <label for="fileInput" class="button-like-link">Choose File</label>
+            <input type="file" id="fileInput" name="file" accept=".txt, .pdf, .docx, .jpg, .jpeg, .png, .heic, .mp3, .wav, .m4a, .flac" onchange="showFileName()">
             <br>
             <div id="error-message" style="color: red; display: none;">Invalid file type. Please choose a valid file type.</div>
-            <button type="submit" id="uploadButton">Upload</button>
+            <div id="filePreview" style="display: none;"></div>
+            <br>
+            <button type="submit" id="uploadButton" class="button-like-link">Upload</button>
         </form>
     </div>
-    <script>
-        const fileInput = document.getElementById('file');
+<script>
+    function showFileName() {
+        const fileInput = document.getElementById('fileInput');
+        const filePreview = document.getElementById('filePreview');
         const errorMessage = document.getElementById('error-message');
-        const uploadForm = document.getElementById('uploadForm');
-        const uploadButton = document.getElementById('uploadButton');
 
-        uploadForm.addEventListener('submit', (event) => {
-            const file = fileInput.files[0];
-            const allowedTypes = ['txt', 'pdf', 'docx', 'jpg', 'jpeg', 'png', 'heic', 'mp3', 'wav', 'm4a', 'flac'];
+        if (fileInput.files.length > 0) {
+            const fileName = fileInput.files[0].name;
+            filePreview.innerText = `Selected file: ${fileName}`;
+            filePreview.style.display = 'inline-block';
+            errorMessage.style.display = 'none';
+        } else {
+            filePreview.innerText = '';
+            filePreview.style.display = 'none';
+        }
+    }
 
-            if (!file || !allowedTypes.includes(file.name.split('.').pop().toLowerCase())) {
-                errorMessage.style.display = 'block';
-                event.preventDefault(); // Prevent form submission
-            } else {
-                errorMessage.style.display = 'none';
-                // Allow form submission to proceed
-            }
-        });
-    </script>
+    function validateFileUpload() {
+        const fileInput = document.getElementById('fileInput');
+        const errorMessage = document.getElementById('error-message');
+
+        if (fileInput.files.length === 0) {
+            errorMessage.innerText = 'Please choose a file to upload.';
+            errorMessage.style.display = 'inline-block';
+            return false;
+        }
+
+        const validFileTypes = ['txt', 'pdf', 'docx', 'jpg', 'jpeg', 'png', 'heic', 'mp3', 'wav', 'm4a', 'flac'];
+        const fileExtension = fileInput.files[0].name.split('.').pop().toLowerCase();
+
+        if (!validFileTypes.includes(fileExtension)) {
+            errorMessage.innerText = 'Invalid file type. Please choose a valid file type.';
+            errorMessage.style.display = 'inline-block';
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
     {% include "footer.html" %}
 </body>
 </html>
