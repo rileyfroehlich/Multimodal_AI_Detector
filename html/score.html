@@ -11,7 +11,6 @@
 <body>
     {% include "header.html" %}
 
-    
     <div class="container">
         <h1>Predicted AI Score</h1>
         <p>Percent Score: <span id="percentScore"></span></p>
@@ -21,24 +20,46 @@
     </div>
 
     <script>
-        // Assume you have received the file details from the server
-        const fileDetails = {
-            filename: "example.jpg",
-            file_type: "image",
-            file_contents: "base64encodedimagestring"
-        };
+        async function fetchFileDetails(file) {
+            const formData = new FormData();
+            formData.append('file', file);
 
-        const percentScore = document.getElementById('percentScore');
-        const filePreview = document.getElementById('filePreview');
-
-        percentScore.textContent = "90"; // Example score, you need to set this dynamically
-
-        if (fileDetails.file_type === "image") {
-            const img = document.createElement('img');
-            img.src = `data:image/${fileDetails.filename.split('.').pop()};base64,${fileDetails.file_contents}`;
-            img.alt = fileDetails.filename;
-            filePreview.appendChild(img);
+            const response = await fetch('/upload/', {
+                method: 'POST',
+                body: formData,
+            });
+            const data = await response.json();
+            return data;
         }
+
+        // Function to update the file preview based on file details
+        async function updateFilePreview() {
+            const fileDetails = await fetchFileDetails();
+
+            const percentScore = document.getElementById('percentScore');
+            const filePreview = document.getElementById('filePreview');
+
+            percentScore.textContent = `${fileDetails.score}%`;
+
+            if (fileDetails.file_type === "image") {
+                const img = document.createElement('img');
+                img.src = `data:image/${fileDetails.filename.split('.').pop()};base64,${fileDetails.file_contents}`;
+                img.alt = fileDetails.filename;
+                filePreview.appendChild(img);
+            } else if (fileDetails.file_type === "audio") {
+                const audio = document.createElement('audio');
+                audio.src = `data:audio/wav;base64,${fileDetails.file_contents}`;
+                audio.controls = true;
+                filePreview.appendChild(audio);
+            } else if (fileDetails.file_type === "text") {
+                const text = document.createElement('pre');
+                text.textContent = atob(fileDetails.file_contents);
+                filePreview.appendChild(text);
+            }
+        }
+
+        // Call the function to update file preview on page load
+        updateFilePreview();
     </script>
     {% include "footer.html" %}
 </body>
