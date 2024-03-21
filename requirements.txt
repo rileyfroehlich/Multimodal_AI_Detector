@@ -9,5 +9,4 @@ numpy
 pandas
 soundfile
 tensorflow
-tempfile
 wave

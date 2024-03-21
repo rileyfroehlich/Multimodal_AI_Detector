@@ -13,53 +13,29 @@
 
     <div class="container">
         <h1>Predicted AI Score</h1>
-        <p>Percent Score: <span id="percentScore"></span></p>
-        <div id="filePreview"></div>
-        <br>    
+        <p>Is this AI: {% if data.ai_bool %}Yes{% else %}No{% endif %}</p>
+        <p>Confidence: <span id="percentScore">{{ data.confidence }}</span></p>
+        <div id="filePreview">
+            {% if data.file_type == "image" %}
+                <img src="data:image/{{ data.filename.split('.')[-1] }};base64,{{ data.file_contents }}" alt="{{ data.filename }}">
+            {% elif data.file_type == "audio" %}
+                <audio controls>
+                    <source src="data:audio/{{ data.file_extension }};base64,{{ data.file_contents }}" type="audio/{{ data.file_extension }}">
+                    Your browser does not support the audio element.
+                </audio>
+            {% elif data.file_type == "text" %}
+                <pre>{{ data.file_contents }}</pre>
+            {% endif %}
+        </div>
+        <br>
         <a href="/" class="button-like-link">Upload Another File</a>
     </div>
 
     <script>
-        async function fetchFileDetails(file) {
-            const formData = new FormData();
-            formData.append('file', file);
-
-            const response = await fetch('/upload/', {
-                method: 'POST',
-                body: formData,
-            });
-            const data = await response.json();
-            return data;
-        }
-
-        // Function to update the file preview based on file details
-        async function updateFilePreview() {
-            const fileDetails = await fetchFileDetails();
-
-            const percentScore = document.getElementById('percentScore');
-            const filePreview = document.getElementById('filePreview');
-
-            percentScore.textContent = `${fileDetails.score}%`;
-
-            if (fileDetails.file_type === "image") {
-                const img = document.createElement('img');
-                img.src = `data:image/${fileDetails.filename.split('.').pop()};base64,${fileDetails.file_contents}`;
-                img.alt = fileDetails.filename;
-                filePreview.appendChild(img);
-            } else if (fileDetails.file_type === "audio") {
-                const audio = document.createElement('audio');
-                audio.src = `data:audio/wav;base64,${fileDetails.file_contents}`;
-                audio.controls = true;
-                filePreview.appendChild(audio);
-            } else if (fileDetails.file_type === "text") {
-                const text = document.createElement('pre');
-                text.textContent = atob(fileDetails.file_contents);
-                filePreview.appendChild(text);
-            }
-        }
-
-        // Call the function to update file preview on page load
-        updateFilePreview();
+        // Remove this JavaScript code related to fetching file details since it's handled by Python
+        // async function fetchFileDetails(file) { ... }
+        // async function updateFilePreview() { ... }
+        // updateFilePreview();
     </script>
     {% include "footer.html" %}
 </body>

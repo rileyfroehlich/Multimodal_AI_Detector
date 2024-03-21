@@ -6,9 +6,9 @@ from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from pathlib import Path
 from fastapi.responses import JSONResponse
-
+import uvicorn
+from typing import Union
 
 app = FastAPI()
 
@@ -17,6 +17,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="html")
 
+#Home page
 @app.get("/")
 def home(request: Request):
     return templates.TemplateResponse(
@@ -26,8 +27,9 @@ def home(request: Request):
 @app.post("/upload/")
 async def upload_file(request: Request, file: UploadFile = File(...)):
     file_type = file.filename.split(".")[-1]  # File extension determines next steps
-    percent_score = -15
+    percent_score = -15 #Default negative percent indicates error
 
+    #Check for file upload
     if file_type == '':
         return templates.TemplateResponse(
             "index.html"
@@ -38,21 +40,21 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
     if file_type not in allowed_types:
         return {"error": "Invalid file type"}
     
-        #Text
+    #Text
     if file_type in ["txt", "pdf", ".docx"]:
         contents = await file.read()
         file_type = "text"
-        file_name = file.filename
         contents = contents.decode()
         percent_score = 15
     #Image
     elif file_type in ["jpg", "jpeg", "png", "heic"]:
+        #Put model_prediction here
         file_type = "image"
-        file_name = file.filename
         percent_score = 10
     #Audio
     elif file_type in ["mp3", "wav", "m4a", "flac"]:
-        percent_score = audio_detection(file.file, file_type)
+        ai_bool, percent_score = audio_detection(file.file, file_type)
+        file_type = 'audio'
 #        try:
 #            percent_score = audio_detection(file.file, file_type)
 #        except:
@@ -61,18 +63,19 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
     else:
         return {"filename": file.filename, "file_type": "unknown"}
     
-    # Process file
-    file_details = {
+    #Format Percent Score if of type float
+    percent_score = f"{percent_score:.1%}"
+
+    #Dynamic data for score.html
+    response_data = {
         "filename": file.filename,
         "file_type": file_type,
-        "file_contents": "base64encodedimagestring"
+        "file_contents": "base64encodedimagestring", #TODO change this
+        "ai_bool": False,
+        "confidence": percent_score
     }
 
-    response_data = {
-        "file_details": file_details,
-        "score": percent_score
-    }
-
+    #Load scores.html with dynamic data
     return templates.TemplateResponse(
         "score.html",
         {
@@ -83,5 +86,4 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
 
 #Main function for app
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
