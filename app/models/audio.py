@@ -1,12 +1,10 @@
 #Imports
-import matplotlib.pyplot as plt
 import io
 import pandas as pd
 import numpy as np
 import librosa
 import wave
 import tensorflow as tf
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, matthews_corrcoef, roc_auc_score
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -15,39 +13,42 @@ from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation, Dropout, Conv2D, MaxPool2D, Flatten, LSTM
 import soundfile as sf
-from imblearn.over_sampling import RandomOverSampler
 from pydub import AudioSegment
-from scipy.io import wavfile
 import tempfile
 
 #Takes in multi channel audio clip and returns 1 channel
 #INPUT: file = .wav file
 #RETURNS: A .wav file with 1 channel
 def convert_stereo_to_mono(file):
-    with wave.open(io.BytesIO(file.read()), 'rb') as wav_file:
+    # Read the input file into a BytesIO object
+    file_bytesio = io.BytesIO(file.read())
+
+    with wave.open(file_bytesio, 'rb') as wav_file:
         channels = wav_file.getnchannels()
         if channels > 1:
-            # Create a temporary file to store the mono audio
-            with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as tmp_file:
-                mono_audio = wave.open(tmp_file, 'wb')
-                mono_audio.setparams(wav_file.getparams())
-                mono_audio.setnchannels(1)
+            # Create a BytesIO object to store the mono audio
+            mono_audio_bytesio = io.BytesIO()
 
-                # Read frames from stereo and write them to mono
-                frames = wav_file.readframes(wav_file.getnframes())
-                mono_audio.writeframes(frames)
+            # Create a new wave file object for writing mono audio
+            mono_audio = wave.open(mono_audio_bytesio, 'wb')
+            mono_audio.setparams(wav_file.getparams())
+            mono_audio.setnchannels(1)
 
-                # Close the temporary file
-                mono_audio.close()
+            # Read frames from stereo and write them to mono
+            frames = wav_file.readframes(wav_file.getnframes())
+            mono_audio.writeframes(frames)
 
-                # Reopen the temporary file for reading
-                mono_audio = wave.open(tmp_file.name, 'rb')
+            # Close the mono audio wave file object
+            mono_audio.close()
+
+            # Get the mono audio bytes from the BytesIO object
+            mono_audio_bytes = mono_audio_bytesio.getvalue()
 
         else:
-            # If already mono, return the original file object
-            mono_audio = wav_file
+            # If already mono, return the original file bytes
+            mono_audio_bytes = file_bytesio.getvalue()
 
-    return mono_audio
+    return mono_audio_bytes
 
 #Takes a .mp3 file and converts to a .wav file
 #INPUT: the .mp3 file

@@ -1,5 +1,13 @@
 fastapi
 uvicorn
 python-multipart
+jinja2
 ffmpeg
 pydub
+librosa
+numpy
+pandas
+soundfile
+tensorflow
+tempfile
+wave
