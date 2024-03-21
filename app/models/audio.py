@@ -14,7 +14,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation, Dropout, Conv2D, MaxPool2D, Flatten, LSTM
 import soundfile as sf
 from pydub import AudioSegment
-import tempfile
+from pathlib import Path
 
 #Takes in multi channel audio clip and returns 1 channel
 #INPUT: file = .wav file
@@ -124,8 +124,8 @@ def extract_audio_data(file):
 #Takes in the file and the filetype and predicts with confidence the probability
 #of AI created audio
 #INPUT: file - file types .mp3 and .wav files
-#INPUT: filetype - the extenstion of the file
-#OUTPUT: AI Generated flag - 0 = REAL // 1 = AI
+#INPUT: filetype - the extenstion of the file as "mp3" or "wav"
+#OUTPUT: AI Generated flag - False = REAL // True = AI
 #OUTPUT: Confidence Percent
 def audio_detection(file, filetype):
   #Check file extenstion, change to .wav
@@ -150,10 +150,21 @@ def audio_detection(file, filetype):
   print("WE EXTRACTED AUDIO")
 
   #Load model
-  AI_bool = True
-  confidence = .954
+  import pickle
+  import joblib
+  from tensorflow.keras.models import load_model
+  BASE_DIR = Path(__file__).resolve(strict=True).parent
+  #model_path = f"{BASE_DIR}/model_pickle/audio_random_forest_model.pkl"
+  #model_path = f'{BASE_DIR}/model_pickle/audio_detector_rf_model.joblib'
+  model_path = f'{BASE_DIR}/model_pickle/audio_detector_lstm_model.h5'
+
+  print(model_path)
+  model = load_model(model_path)
+  #with open(model_path, 'rb') as f:
+  #  model = pickle.load(f)
+  #model = joblib.load(model_path)
 
   #Predict with model
-  #AI_score = model.predict(extracted_audio_df)
+  AI_bool, confidence = model.predict(extracted_audio_df)
 
   return AI_bool, confidence

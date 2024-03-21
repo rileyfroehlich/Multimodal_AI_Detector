@@ -7,6 +7,8 @@ from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException
 import uvicorn
 from typing import Union
 
@@ -71,7 +73,7 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
         "filename": file.filename,
         "file_type": file_type,
         "file_contents": "base64encodedimagestring", #TODO change this
-        "ai_bool": False,
+        "ai_bool": ai_bool,
         "confidence": percent_score
     }
 
@@ -83,6 +85,21 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
             "data": response_data
         }
     )
+
+# Exception handler for RequestValidationError (e.g., validation errors in request body)
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    return templates.TemplateResponse("error.html", {"request": request, "error_message": "Validation error"})
+
+# Exception handler for HTTPException (e.g., 404 errors)
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    return templates.TemplateResponse("error.html", {"request": request, "error_message": exc.detail})
+
+# Generic exception handler for all other unhandled errors
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception):
+    return templates.TemplateResponse("error.html", {"request": request, "error_message": "An unexpected error occurred"})
 
 #Main function for app
 if __name__ == "__main__":

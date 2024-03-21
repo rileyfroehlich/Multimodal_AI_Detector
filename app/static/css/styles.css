@@ -9,7 +9,7 @@ body {
 
 .container {
     max-width: 800px;
-    margin: 50px auto;
+    margin: 0px auto;
     padding: 20px;
     background-color: #fff;
     color: black;
@@ -114,17 +114,27 @@ a.button-like-link:hover {
 .navbar {
     background-color: #333; /* Dark background for navbar */
     color: #fff; /* White text color for navbar text */
+    padding: 20px; /* Increase top and bottom padding */
 }
 
 .navbar-brand {
     color: #fff;
     font-weight: bold;
+    font-size: 24px; /* Increase font size */
+    text-wrap: pretty;
+    display: flex;
 }
 
 .navbar-brand:hover {
     color: #ccc; /* Slightly gray color on hover */
     text-decoration: none; /* Remove underline on hover */
     transition: color 0.3s ease; /* Smooth transition for color change */
+}
+
+.navbar-brand img {
+    width: 100px; /* Adjust the width of the image */
+    height: 100px; /* Adjust the height of the image */
+    margin-right: 10px; /* Optional: Add margin to the right of the image */
 }
 
 /* Footer CSS */
@@ -142,7 +152,7 @@ a.button-like-link:hover {
 
 a.names {
     display: inline-block; /* Change from inline to inline-block */
-    padding: 0 10px; /* Add left and right padding */
+    padding: 0 20px; /* Add left and right padding */
 }
 
 a.names:hover {
