@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 import librosa
 import wave
-import tensorflow as tf
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, matthews_corrcoef, roc_auc_score
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -156,8 +155,8 @@ def audio_detection(file, filetype):
   BASE_DIR = Path(__file__).resolve(strict=True).parent
   #model_path = f"{BASE_DIR}/model_pickle/audio_random_forest_model.pkl"
   #model_path = f'{BASE_DIR}/model_pickle/audio_detector_rf_model.joblib'
-  model_path = f'{BASE_DIR}/model_pickle/audio_detector_lstm_model.h5'
-
+  model_path = f'{BASE_DIR}/model_pickle/audio_detector_lstm_model.keras'
+  
   print(model_path)
   model = load_model(model_path)
   #with open(model_path, 'rb') as f:

@@ -83,7 +83,8 @@ input[type="file"] {
     max-width: 100%;
     height: auto;
     border-radius: 5px;
-    margin-top: 10px;
+    display: block; /* Prevents any extra space below the image */
+    margin: 0 auto; /* Center the image horizontally within the container */
 }
 
 a {

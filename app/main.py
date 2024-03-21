@@ -10,7 +10,7 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
 import uvicorn
-from typing import Union
+import base64
 
 app = FastAPI()
 
@@ -29,7 +29,9 @@ def home(request: Request):
 @app.post("/upload/")
 async def upload_file(request: Request, file: UploadFile = File(...)):
     file_type = file.filename.split(".")[-1]  # File extension determines next steps
+    file_contents = ''
     percent_score = -15 #Default negative percent indicates error
+    ai_bool = False
 
     #Check for file upload
     if file_type == '':
@@ -45,22 +47,25 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
     #Text
     if file_type in ["txt", "pdf", ".docx"]:
         contents = await file.read()
+        #Put model prediction here
+        file_contents = file_contents.decode()
+        file_extension = file_type
         file_type = "text"
-        contents = contents.decode()
         percent_score = 15
     #Image
     elif file_type in ["jpg", "jpeg", "png", "heic"]:
         #Put model_prediction here
+        file_contents = base64.b64encode(await file.read()).decode("utf-8")
+        file_extension = file_type
         file_type = "image"
         percent_score = 10
     #Audio
     elif file_type in ["mp3", "wav", "m4a", "flac"]:
-        ai_bool, percent_score = audio_detection(file.file, file_type)
+        #ai_bool, percent_score = audio_detection(file.file, file_type)
+        file_contents = base64.b64encode(await file.read()).decode("utf-8")
+        file_extension = file_type
         file_type = 'audio'
-#        try:
-#            percent_score = audio_detection(file.file, file_type)
-#        except:
-#            return {"error": "audio_error"}
+
     #Other (Throw error) This should not run
     else:
         return {"filename": file.filename, "file_type": "unknown"}
@@ -71,8 +76,9 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
     #Dynamic data for score.html
     response_data = {
         "filename": file.filename,
+        "file_extension": file_extension,
         "file_type": file_type,
-        "file_contents": "base64encodedimagestring", #TODO change this
+        "file_contents": file_contents,
         "ai_bool": ai_bool,
         "confidence": percent_score
     }
