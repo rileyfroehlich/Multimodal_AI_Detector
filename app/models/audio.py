@@ -149,21 +149,18 @@ def audio_detection(file, filetype):
   print("WE EXTRACTED AUDIO")
 
   #Load model
-  import pickle
-  import joblib
   from tensorflow.keras.models import load_model
   BASE_DIR = Path(__file__).resolve(strict=True).parent
-  #model_path = f"{BASE_DIR}/model_pickle/audio_random_forest_model.pkl"
-  #model_path = f'{BASE_DIR}/model_pickle/audio_detector_rf_model.joblib'
   model_path = f'{BASE_DIR}/model_pickle/audio_detector_lstm_model.keras'
   
   print(model_path)
   model = load_model(model_path)
-  #with open(model_path, 'rb') as f:
-  #  model = pickle.load(f)
-  #model = joblib.load(model_path)
 
   #Predict with model
-  AI_bool, confidence = model.predict(extracted_audio_df)
+  AI_bool = model.predict(extracted_audio_df)
+  print(AI_bool)
+  print(type(AI_bool))
+  AI_bool = np.average(AI_bool) > .5
+  confidence = 10
 
   return AI_bool, confidence

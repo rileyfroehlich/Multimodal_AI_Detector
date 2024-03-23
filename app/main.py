@@ -61,7 +61,7 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
         percent_score = 10
     #Audio
     elif file_type in ["mp3", "wav", "m4a", "flac"]:
-        #ai_bool, percent_score = audio_detection(file.file, file_type)
+        ai_bool, percent_score = audio_detection(file.file, file_type)
         file_contents = base64.b64encode(await file.read()).decode("utf-8")
         file_extension = file_type
         file_type = 'audio'
