@@ -55,8 +55,8 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
         file_type = "text"
     #Image
     elif file_type in ["jpg", "jpeg", "png", "heic"]:
-        #Put model_prediction here
-        ai_bool, percent_score = image_pipeline(file.file, file_type)
+        file_contents = await file.read()
+        ai_bool, percent_score = image_pipeline(file_contents, file_type)
         file_contents = base64.b64encode(await file.read()).decode("utf-8")
         file_extension = file_type
         file_type = "image"

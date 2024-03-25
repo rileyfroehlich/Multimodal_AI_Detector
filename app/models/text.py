@@ -5,7 +5,7 @@ from tensorflow.keras.models import load_model
 import pickle
 from keras.preprocessing.sequence import pad_sequences
 
-def text_pipeline(text_file):
+def text_pipeline(text_file, filetype):
   
   #QUESTIONS: what is df_subset refrencing?
   #TODO: load as bytes file

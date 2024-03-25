@@ -10,3 +10,5 @@ pandas
 soundfile
 tensorflow
 wave
+python-docx 
+docx
