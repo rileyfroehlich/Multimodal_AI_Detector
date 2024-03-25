@@ -146,6 +146,7 @@ def audio_detection(file, filetype):
   print('MADE IT PAST CONVERT TO MONO')
   #Extract audio data
   extracted_audio_df = extract_audio_data(wav_file)
+  extracted_audio_df = extracted_audio_df.T
   print("WE EXTRACTED AUDIO")
 
   #Load model

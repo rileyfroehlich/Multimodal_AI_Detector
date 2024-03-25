@@ -24,7 +24,6 @@ def image_pipeline(image_file, filetype):
     img = preprocess_image(image_file)
     BASE_DIR = Path(__file__).resolve(strict=True).parent
     model_path = f'{BASE_DIR}\models_image\image_detection_model.h5'
-    model_path = 'C:\\Users\\riley\\OneDrive\\Documents\\Code for school\\Capstone\\app\\models\\models_image\\image_detection_model.h5'
   # Predict using the model
 #  try:
     model = load_model(model_path)
