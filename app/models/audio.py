@@ -151,7 +151,7 @@ def audio_detection(file, filetype):
   #Load model
   from tensorflow.keras.models import load_model
   BASE_DIR = Path(__file__).resolve(strict=True).parent
-  model_path = f'{BASE_DIR}/model_pickle/audio_detector_lstm_model.keras'
+  model_path = f'{BASE_DIR}/models_audio/audio_detector_lstm_model.keras'
   
   print(model_path)
   model = load_model(model_path)

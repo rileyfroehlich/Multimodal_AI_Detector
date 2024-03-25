@@ -1,5 +1,7 @@
-##### TODO Import models ######
+##### Import models ######
 from models.audio import audio_detection
+from models.image import image_pipeline
+from models.text import text_pipeline
 
 # Imports
 from fastapi import FastAPI, File, UploadFile, Request
@@ -47,18 +49,17 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
     #Text
     if file_type in ["txt", "pdf", ".docx"]:
         contents = await file.read()
-        #Put model prediction here
+        ai_bool, percent_score = text_pipeline(file.file, file_type)
         file_contents = file_contents.decode()
         file_extension = file_type
         file_type = "text"
-        percent_score = 15
     #Image
     elif file_type in ["jpg", "jpeg", "png", "heic"]:
         #Put model_prediction here
+        ai_bool, percent_score = image_pipeline(file.file, file_type)
         file_contents = base64.b64encode(await file.read()).decode("utf-8")
         file_extension = file_type
         file_type = "image"
-        percent_score = 10
     #Audio
     elif file_type in ["mp3", "wav", "m4a", "flac"]:
         ai_bool, percent_score = audio_detection(file.file, file_type)

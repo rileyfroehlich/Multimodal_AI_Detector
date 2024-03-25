@@ -1,8 +1,14 @@
 import pdfplumber
 import docx
+import tensorflow as tf
+from tensorflow.keras.models import load_model
 import pickle
+from keras.preprocessing.sequence import pad_sequences
 
 def text_pipeline(text_file):
+  
+  #QUESTIONS: what is df_subset refrencing?
+  #TODO: load as bytes file
   try:
     text = ""
     if text_file.endswith(".pdf"):
@@ -16,7 +22,7 @@ def text_pipeline(text_file):
 
     elif text_file.endswith(".txt"):
       with open(text_file, 'r') as f:
-        text =  f.read()
+        text = f.read()
 
     with open('PRETRAINED_TOKENIZER_HERE', 'rb') as t:
       tokenizer = pickle.load(t)
