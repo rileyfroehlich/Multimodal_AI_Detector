@@ -1,9 +1,42 @@
 <footer class="footer">
     <div>
-        <p>Add about section here + how it works</p>
+        <p class="footer-about">
+            This website was designed to detect artificially generated deepfakes in audio, image, and text modalities. 
+            To begin, click on the "Choose file" button and select a file. Once selected, click "Upload" 
+            Please note this will begin the data preprocessing phase where we extract features to pass onto our neural network models. 
+            <i>PLEASE BE PATIENT AND DO NOT REFRESH THE PAGE AFTER CLICKING UPLOAD.</i> 
+        </p>
+    </div>
+    <div class="footer-about">
+        <table>
+            <tr>
+                <th>Modalities</th>
+                <th>Accepted Filetypes</th>
+            </tr>
+            <tr>
+                <td>Text</td>
+                <td>.pdf, .txt, .docx</td>
+            </tr>
+            <tr>
+                <td>Image</td>
+                <td>.jpg, .jpeg, .heic, .png</td>
+            </tr>
+            <tr>
+                <td>Audio</td>
+                <td>.wav, .mp3, .m4a, .flac</td>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <div>
+        <p class="footer-about">
+            We have trained our Keras Tensorflow models on our datasets found here. Our test accuracies range from 80%-95%, 
+            although in practice this may be lower, especially as generative AI becomes better. 
+            Please do not solely rely on our tool for the detection of deepfakes.
+        </p>
     </div>
     <div>
-        <p>Created by</p>
+        <h4>Created by</h4>
     </div>
     <div id="footerContainer">
         <div>
@@ -17,4 +50,5 @@
             </p>
         </div>
     </div>
+    <p>All rights reserved.</p>
 </footer>
