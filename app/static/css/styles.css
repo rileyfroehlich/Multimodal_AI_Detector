@@ -139,8 +139,8 @@ a.button-like-link:hover {
 }
 
 .navbar-brand img {
-    width: 100px; /* Adjust the width of the image */
-    height: 100px; /* Adjust the height of the image */
+    width: 150px; /* Adjust the width of the image */
+    height: 150px; /* Adjust the height of the image */
     margin-right: 10px; /* Optional: Add margin to the right of the image */
 }
 

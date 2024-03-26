@@ -4,34 +4,38 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 import pickle
 from keras.preprocessing.sequence import pad_sequences
+from pathlib import Path
 
 def text_pipeline(text_file, filetype):
   
-  #QUESTIONS: what is df_subset refrencing?
   #TODO: load as bytes file
-  try:
+  #try:
     text = ""
-    if text_file.endswith(".pdf"):
+    if filetype is ("pdf"):
       with pdfplumber.open(text_file) as pdf:
         for page in pdf.pages:
           text = text + " " + page.extract_text()
-    elif text_file.endswith(".docx"):
+    elif filetype is ("docx"):
       doc = docx.Document(text_file)
       for paragraph in doc.paragraphs:
         text += paragraph.text
 
-    elif text_file.endswith(".txt"):
+    elif filetype is ("txt"):
       with open(text_file, 'r') as f:
         text = f.read()
-
-    with open('PRETRAINED_TOKENIZER_HERE', 'rb') as t:
+    BASE_DIR = Path(__file__).resolve(strict=True).parent
+    tokenizer_path = f'{BASE_DIR}\\models_text\\text_pretrained_tokenizer'
+    with open(tokenizer_path, 'rb') as t:
       tokenizer = pickle.load(t)
 
     tokenizer.fit_on_texts(text)
-
-    model = load_model("TEXT_MODEL_HERE")
-    sequences = tokenizer.texts_to_sequences(df_subset["text"])
+    print('TOKENIZED')
+    model_path = f'{BASE_DIR}\\models_text\\text_model.keras'
+    model = load_model(model_path)
+    sequences = tokenizer.texts_to_sequences(text)
     padded_sequences = pad_sequences(sequences, maxlen=1000, padding='post')
-    return (model.predict(text) > .5, f"{model.predict(text)}")
-  except:
+    AI_score = model.predict(padded_sequences)
+    print('THIS IS A PREDICTION')
+    return (AI_score > .5, AI_score)
+  #except:
     return (None, "")

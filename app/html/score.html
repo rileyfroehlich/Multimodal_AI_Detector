@@ -14,8 +14,8 @@
     
     <div class="container">
         <h1>Predicted AI Score</h1>
-        <p>Is this AI: {% if data.ai_bool %}Yes{% else %}No{% endif %}</p>
-        <p>Confidence: <span id="percentScore">{{ data.confidence }}</span></p>
+        <p>Is this AI?:</p>
+        <p>{% if data.ai_bool %}Yes{% else %}No{% endif %}</p>
         <div id="filePreview">
             {% if data.file_type == "image" %}
                 <img src="data:image/{{ data.filename.split('.')[-1] }};base64,{{ data.file_contents }}" alt="{{ data.filename }}">

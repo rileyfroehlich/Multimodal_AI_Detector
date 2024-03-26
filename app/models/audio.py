@@ -4,13 +4,7 @@ import pandas as pd
 import numpy as np
 import librosa
 import wave
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, matthews_corrcoef, roc_auc_score
-from tensorflow import keras
-from tensorflow.keras import layers
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Activation, Dropout, Conv2D, MaxPool2D, Flatten, LSTM
+from tensorflow.keras.models import load_model
 import soundfile as sf
 from pydub import AudioSegment
 from pathlib import Path
@@ -150,7 +144,6 @@ def audio_detection(file, filetype):
   print("WE EXTRACTED AUDIO")
 
   #Load model
-  from tensorflow.keras.models import load_model
   BASE_DIR = Path(__file__).resolve(strict=True).parent
   model_path = f'{BASE_DIR}/models_audio/audio_detector_lstm_model.keras'
   
