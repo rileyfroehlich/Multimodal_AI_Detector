@@ -24,19 +24,13 @@
                     Your browser does not support the audio element.
                 </audio>
             {% elif data.file_type == "text" %}
-                <pre>{{ data.file_contents }}</pre>
+                <pre class="text-preview">{{ data.file_contents }}</pre>
             {% endif %}
         </div>
         <br>
         <a href="/" class="button-like-link text-center">Upload Another File</a>
     </div>
 
-    <script>
-        // Remove this JavaScript code related to fetching file details since it's handled by Python
-        // async function fetchFileDetails(file) { ... }
-        // async function updateFilePreview() { ... }
-        // updateFilePreview();
-    </script>
     {% include "footer-score.html" %}
 </body>
 </html>

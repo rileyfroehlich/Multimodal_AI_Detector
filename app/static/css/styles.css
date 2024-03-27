@@ -99,6 +99,19 @@ input[type="file"] {
     margin: 0 auto; /* Center the image horizontally within the container */
 }
 
+.text-preview {
+    max-height: 400px;
+    overflow-y: auto; /* Add vertical scrollbar when content overflows */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    word-wrap: break-word;
+    white-space: pre-wrap; 
+    overflow-wrap: break-word; 
+    word-break: break-all; 
+    text-align: left; 
+}
+
 .text-center {
     text-align: center;
 }

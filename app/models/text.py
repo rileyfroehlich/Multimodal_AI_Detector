@@ -42,6 +42,6 @@ def text_pipeline(text_file, filetype):
     AI_score = model.predict(padded_sequences)
     print('THIS IS A PREDICTION')
     AI_score = np.average(AI_score)
-    return (AI_score > .5, AI_score)
+    return (AI_score > .5, AI_score, text)
   #except:
     return (None, "")

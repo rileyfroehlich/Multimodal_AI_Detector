@@ -50,11 +50,11 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
     #Text
     if file_type in ["txt", "pdf", "docx"]:
         contents = await file.read()
-        ai_bool, percent_score = text_pipeline(contents, file_type)
+        ai_bool, percent_score, text = text_pipeline(contents, file_type)
+        file_contents = text
         file_contents = contents
         file_extension = file_type
         file_type = "text"
-        percent_score = 3
     #Image
     elif file_type in ["jpg", "jpeg", "png", "heic"]:
         file_contents = await file.read()
