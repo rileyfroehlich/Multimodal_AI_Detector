@@ -14,8 +14,7 @@ from pathlib import Path
 #RETURNS: A .wav file with 1 channel
 def convert_stereo_to_mono(file):
     # Read the input file into a BytesIO object
-    file_bytesio = io.BytesIO(file.read())
-
+    file_bytesio = io.BytesIO(file)
     with wave.open(file_bytesio, 'rb') as wav_file:
         channels = wav_file.getnchannels()
         if channels > 1:
@@ -48,7 +47,7 @@ def convert_stereo_to_mono(file):
 #RETURN: A .wav file
 def convert_mp3_to_wav(file):
     # Load MP3 byte data into an AudioSegment
-    mp3_data = io.BytesIO(file.read())
+    mp3_data = io.BytesIO(file)
     audio_data = AudioSegment.from_mp3(mp3_data)
 
     # Export AudioSegment as WAV format byte data
@@ -62,7 +61,7 @@ def convert_mp3_to_wav(file):
 #RETURN: .wav file
 def convert_m4a_to_wav(file):
     
-    m4a_audio = AudioSegment.from_file(io.BytesIO(file.read()), format="m4a")
+    m4a_audio = AudioSegment.from_file(io.BytesIO(file), format="m4a")
     buffer = io.BytesIO()
     m4a_audio.export(buffer, format="wav")
     buffer.seek(0)
@@ -73,7 +72,7 @@ def convert_m4a_to_wav(file):
 #RETURN: .wav file
 def convert_flac_to_wav(file):
 
-  audio_data = AudioSegment.from_file(io.BytesIO(file.read(), format="flac"))
+  audio_data = AudioSegment.from_file(io.BytesIO(file, format="flac"))
   wav_data = io.BytesIO()
   audio_data.export(wav_data, format="wav")
   wav_data.seek(0)
