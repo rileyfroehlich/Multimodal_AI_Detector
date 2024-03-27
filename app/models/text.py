@@ -29,13 +29,13 @@ def text_pipeline(text_file, filetype):
           text += paragraph.text
 
     BASE_DIR = Path(__file__).resolve(strict=True).parent
-    tokenizer_path = f'{BASE_DIR}\\models_text\\text_pretrained_tokenizer'
+    tokenizer_path = f'{BASE_DIR}/models_text/text_pretrained_tokenizer'
     with open(tokenizer_path, 'rb') as t:
       tokenizer = pickle.load(t)
 
     tokenizer.fit_on_texts(text)
     print('TOKENIZED')
-    model_path = f'{BASE_DIR}\\models_text\\text_model.keras'
+    model_path = f'{BASE_DIR}/models_text/text_model.keras'
     model = load_model(model_path)
     sequences = tokenizer.texts_to_sequences(text)
     padded_sequences = pad_sequences(sequences, maxlen=1000, padding='post')
