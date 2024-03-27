@@ -8,11 +8,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from tensorflow.keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
-from sklearn.model_selection import train_test_split
-from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Embedding, LSTM, Dense
-from tensorflow.keras.optimizers import Adam
 import io
 
 def text_pipeline(text_file, filetype):

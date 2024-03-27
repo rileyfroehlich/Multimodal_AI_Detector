@@ -1,7 +1,6 @@
 from tensorflow.keras.models import load_model
 import tensorflow as tf
 from pathlib import Path
-from PIL import Image
 import io
 
 def preprocess_image(image_bytes: bytes) -> tf.Tensor:
