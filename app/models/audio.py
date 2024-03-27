@@ -151,10 +151,10 @@ def audio_detection(file, filetype):
   model = load_model(model_path)
 
   #Predict with model
-  AI_bool = model.predict(extracted_audio_df)
-  print(AI_bool)
-  print(type(AI_bool))
-  AI_bool = np.average(AI_bool) > .5
-  confidence = 10
+  confidence = model.predict(extracted_audio_df)
+  AI_bool = np.average(confidence) > .5
+  print(confidence)
+  if not AI_bool:
+     confidence = 1 - confidence
 
-  return AI_bool, confidence
+  return AI_bool, float(confidence)
