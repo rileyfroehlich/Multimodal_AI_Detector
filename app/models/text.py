@@ -29,7 +29,7 @@ def text_pipeline(text_file, filetype):
           text += paragraph.text
 
     BASE_DIR = Path(__file__).resolve(strict=True).parent
-    tokenizer_path = f'{BASE_DIR}/models_text/text_pretrained_tokenizer'
+    tokenizer_path = f'{BASE_DIR}/models_text/text_pretrained_tokenizer.pkl'
     with open(tokenizer_path, 'rb') as t:
       tokenizer = pickle.load(t)
 
