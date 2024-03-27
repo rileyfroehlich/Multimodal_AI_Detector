@@ -47,9 +47,9 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
         return {"error": "Invalid file type"}
     
     #Text
-    if file_type in ["txt", "pdf", ".docx"]:
+    if file_type in ["txt", "pdf", "docx"]:
         contents = await file.read()
-        ai_bool, percent_score = text_pipeline(file.file, file_type)
+        ai_bool, percent_score = text_pipeline(contents, file_type)
         file_contents = contents
         file_extension = file_type
         file_type = "text"

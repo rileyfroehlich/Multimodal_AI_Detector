@@ -6,9 +6,6 @@ import io
 
 def preprocess_image(image_bytes: bytes) -> tf.Tensor:
 
-    image = Image.open(io.BytesIO(image_bytes))
-    image.verify()  # Verify image data integrity
-    image.close()   # Close the image file
     try:
         # Decode image (assuming JPEG format)
         img = tf.image.decode_jpeg(image_bytes, channels=3)
