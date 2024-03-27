@@ -15,6 +15,12 @@ body {
     color: black;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto; /* Center the container itself */
+    flex-direction: column;
 }
 
 h1 {
@@ -57,7 +63,8 @@ h1 {
 #error-message {
     display: inline-block;
     margin-left: 10px;
-    margin-top: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     color: #555; /* Text color for file name preview */
 }
 
@@ -75,16 +82,25 @@ input[type="file"] {
     margin-bottom: 10px;
 }
 
-#filePreview {
+.filePreview {
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto; /* Center the container itself */
 }
 
-#filePreview img {
+.filePreview img {
     max-width: 100%;
+    max-height: 400px;
     height: auto;
     border-radius: 5px;
     display: block; /* Prevents any extra space below the image */
     margin: 0 auto; /* Center the image horizontally within the container */
+}
+
+.text-center {
+    text-align: center;
 }
 
 a {

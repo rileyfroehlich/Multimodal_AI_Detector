@@ -13,10 +13,9 @@
 
     
     <div class="container">
-        <h1>Predicted AI Score</h1>
-        <p>Is this AI?:</p>
-        <p>{% if data.ai_bool %}Yes{% else %}No{% endif %}</p>
-        <div id="filePreview">
+        <h1>Is this AI?</h1>
+        <h3 class="text-center">{% if data.ai_bool %}Yes{% else %}No{% endif %}</h3>
+        <div class="center filePreview">
             {% if data.file_type == "image" %}
                 <img src="data:image/{{ data.filename.split('.')[-1] }};base64,{{ data.file_contents }}" alt="{{ data.filename }}">
             {% elif data.file_type == "audio" %}
@@ -29,7 +28,7 @@
             {% endif %}
         </div>
         <br>
-        <a href="/" class="button-like-link">Upload Another File</a>
+        <a href="/" class="button-like-link text-center">Upload Another File</a>
     </div>
 
     <script>

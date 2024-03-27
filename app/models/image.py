@@ -12,7 +12,7 @@ def preprocess_image(image_bytes):
         img = tf.image.resize(img, (256,256))
         # Convert image to float32 and normalize
         img = tf.cast(img, tf.float32) / 255.0
-        # Expand dimensions to include batch size (1 in this case)
+        # Expand dimensions to include batch size
         img = tf.expand_dims(img, axis=0)
         return img
     except tf.errors.InvalidArgumentError:
