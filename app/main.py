@@ -64,13 +64,9 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
         file_type = "image"
     #Audio
     elif file_type in ["mp3", "wav", "m4a", "flac"]:
-        file_copy = io.BytesIO(await file.read())
-        file_copy.seek(0)  # Reset file pointer to the beginning
-        file_contents_bytes = file_copy.read()  # Read the file data as bytes
-        file_contents = base64.b64encode(file_contents_bytes).decode("utf-8")  # Encode as Base64
-        ai_bool, percent_score = audio_detection(file_copy, file_type)
-        #file_contents = await file.read()
-        #file_contents = base64.b64encode(file_contents).decode("utf-8")
+        ai_bool, percent_score = audio_detection(file.file, file_type)
+        file_contents = await file.read()
+        file_contents = base64.b64encode(file_contents).decode("utf-8")
         file_extension = file_type
         file_type = 'audio'
 
