@@ -12,9 +12,11 @@
 
     <div class="container">
         <h1>Please Upload a File</h1>
+        <h4>(max size: 500MB)</h4>
+        <br>
         <form id="uploadForm" method="post" enctype="multipart/form-data" action="/upload/" onsubmit="return validateFileUpload()">
             <label for="fileInput" class="button-like-link">Choose File</label>
-            <input type="file" id="fileInput" name="file" accept=".txt, .pdf, .docx, .jpg, .jpeg, .png, .mp3, .wav, .m4a, .flac" onchange="showFileName()">
+            <input type="file" id="fileInput" name="file" accept=".txt, .pdf, .docx, .jpg, .jpeg, .png, .mp3, .wav, .m4a, .flac" onchange="showFileName(); checkFileSize(this);">
             <br>
             <div id="error-message" style="color: red; display: none;">Invalid file type. Please choose a valid file type.</div>
             <div id="filePreview" style="display: none;"></div>
@@ -46,6 +48,9 @@
         if (fileInput.files.length === 0) {
             errorMessage.innerText = 'Please choose a file to upload.';
             errorMessage.style.display = 'inline-block';
+            fileInput.innerText = '';
+            fileInput.style.display = 'none';
+
             return false;
         }
 
@@ -55,11 +60,30 @@
         if (!validFileTypes.includes(fileExtension)) {
             errorMessage.innerText = 'Invalid file type. Please choose a valid file type.';
             errorMessage.style.display = 'inline-block';
+            fileInput.innerText = '';
+            fileInput.style.display = 'none';
+
             return false;
         }
 
         return true;
     }
+
+    function checkFileSize(input) {
+            const fileInput = document.getElementById('fileInput');
+            const errorMessage = document.getElementById('error-message');
+            const filePreview = document.getElementById('filePreview');
+
+            // Check if the file size exceeds 500MB (500 * 1024 * 1024 bytes)
+            if (input.files[0] && input.files[0].size > 500 * 1024 * 1024) {
+                alert("File size exceeds the maximum limit of 500MB.");
+                input.value = '';
+                errorMessage.innerText = 'Please select a smaller file.';
+                errorMessage.style.display = 'inline-block';
+                fileInput.innerText = '';
+                fileInput.style.display = 'none';    
+            }
+        }
 </script>
 
     {% include "footer.html" %}
