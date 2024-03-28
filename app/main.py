@@ -43,7 +43,7 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
         )
     
     # Validate file type
-    allowed_types = ['txt', 'pdf', 'docx', 'jpg', 'jpeg', 'png', 'heic', 'mp3', 'wav', 'm4a', 'flac']
+    allowed_types = ['txt', 'pdf', 'docx', 'jpg', 'jpeg', 'png', 'mp3', 'wav', 'm4a', 'flac']
     if file_type not in allowed_types:
         return {"error": "Invalid file type"}
     
@@ -56,7 +56,7 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
         file_extension = file_type
         file_type = "text"
     #Image
-    elif file_type in ["jpg", "jpeg", "png", "heic"]:
+    elif file_type in ["jpg", "jpeg", "png"]:
         file_contents = await file.read()
         ai_bool, percent_score = image_pipeline(file_contents, file_type)
         file_contents = base64.b64encode(file_contents).decode("utf-8")

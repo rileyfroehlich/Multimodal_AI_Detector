@@ -14,7 +14,7 @@
         <h1>Please Upload a File</h1>
         <form id="uploadForm" method="post" enctype="multipart/form-data" action="/upload/" onsubmit="return validateFileUpload()">
             <label for="fileInput" class="button-like-link">Choose File</label>
-            <input type="file" id="fileInput" name="file" accept=".txt, .pdf, .docx, .jpg, .jpeg, .png, .heic, .mp3, .wav, .m4a, .flac" onchange="showFileName()">
+            <input type="file" id="fileInput" name="file" accept=".txt, .pdf, .docx, .jpg, .jpeg, .png, .mp3, .wav, .m4a, .flac" onchange="showFileName()">
             <br>
             <div id="error-message" style="color: red; display: none;">Invalid file type. Please choose a valid file type.</div>
             <div id="filePreview" style="display: none;"></div>
@@ -49,7 +49,7 @@
             return false;
         }
 
-        const validFileTypes = ['txt', 'pdf', 'docx', 'jpg', 'jpeg', 'png', 'heic', 'mp3', 'wav', 'm4a', 'flac'];
+        const validFileTypes = ['txt', 'pdf', 'docx', 'jpg', 'jpeg', 'png', 'mp3', 'wav', 'm4a', 'flac'];
         const fileExtension = fileInput.files[0].name.split('.').pop().toLowerCase();
 
         if (!validFileTypes.includes(fileExtension)) {
