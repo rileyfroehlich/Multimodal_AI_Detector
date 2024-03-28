@@ -12,7 +12,7 @@ from pathlib import Path
 #Takes in multi channel audio clip and returns 1 channel
 #INPUT: file = .wav file
 #RETURNS: A .wav file with 1 channel
-def convert_stereo_to_mono(file, filetype):
+def convert_stereo_to_mono(file):
     # Read the input file into a BytesIO object
     file_bytesio = io.BytesIO(file)
     with wave.open(file_bytesio, 'rb') as wav_file:
