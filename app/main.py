@@ -13,7 +13,6 @@ from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
 import uvicorn
 import base64
-import io
 
 app = FastAPI()
 
@@ -52,7 +51,6 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
         contents = await file.read()
         ai_bool, percent_score, text = text_pipeline(contents, file_type)
         file_contents = text
-        file_contents = contents
         file_extension = file_type
         file_type = "text"
     #Image

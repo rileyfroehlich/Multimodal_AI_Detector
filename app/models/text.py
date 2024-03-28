@@ -18,7 +18,7 @@ def text_pipeline(text_file, filetype):
 
     else:
       text_file = io.BytesIO(text_file)
-    #try:
+
       if filetype == ("pdf"):
         with pdfplumber.open(text_file) as pdf:
           for page in pdf.pages:
@@ -38,11 +38,9 @@ def text_pipeline(text_file, filetype):
     model = load_model(model_path)
     sequences = tokenizer.texts_to_sequences(text)
     padded_sequences = pad_sequences(sequences, maxlen=1000, padding='post')
-    AI_score = model.predict(padded_sequences)
-    AI_score = np.average(AI_score)
-    AI_bool = AI_score > .5
+    confidence = model.predict(padded_sequences)
+    confidence = np.average(confidence)
+    AI_bool = confidence > .5
     if not AI_bool:
      confidence = 1 - confidence
-    return (AI_bool, AI_score, text)
-  #except:
-    return (None, "")
+    return (AI_bool, confidence, text)

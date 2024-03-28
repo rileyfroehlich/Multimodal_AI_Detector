@@ -24,7 +24,6 @@ def image_pipeline(image_file, filetype):
     model_path = f'{BASE_DIR}/models_image/image_model.keras'
 
   # Predict using the model
-#  try:
     model = load_model(model_path)
     confidence = model.predict(img)
     # Convert predictions to binary
@@ -32,5 +31,3 @@ def image_pipeline(image_file, filetype):
     if not AI_bool:
      confidence = 1 - confidence
     return AI_bool, float(confidence)
-#  except:
-    return (None, "")

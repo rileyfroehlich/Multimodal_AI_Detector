@@ -187,6 +187,12 @@ a.button-like-link:hover {
     text-decoration: none; /* Remove underline */
 }
 
+.about-link {
+    display: inline;
+    color: #fff; /* Change link color if needed */
+    text-decoration: underline; /* Underline the link text */
+}
+
 a.names {
     display: inline-block; /* Change from inline to inline-block */
     padding: 0 20px; /* Add left and right padding */
