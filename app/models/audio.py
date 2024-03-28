@@ -131,22 +131,17 @@ def audio_detection(file, filetype):
       file = convert_m4a_to_wav(file)
     else:
       raise ValueError("Acceptable audio file types are .mp3, .m4a, .flac, or .wav, sorry!")
-  #DOWNLOAD 
-  print('MADE IT PAST CONVERT TO WAV')
 
   #Check Stereo audio, convert to mono
   wav_file = convert_stereo_to_mono(file)
-  print('MADE IT PAST CONVERT TO MONO')
   #Extract audio data
   extracted_audio_df = extract_audio_data(wav_file)
   extracted_audio_df = extracted_audio_df.T
-  print("WE EXTRACTED AUDIO")
 
   #Load model
   BASE_DIR = Path(__file__).resolve(strict=True).parent
   model_path = f'{BASE_DIR}/models_audio/audio_detector_lstm_model.keras'
   
-  print(model_path)
   model = load_model(model_path)
 
   #Predict with model

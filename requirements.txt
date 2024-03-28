@@ -11,6 +11,4 @@ soundfile
 tensorflow
 wave
 python-docx 
-docx
-Keras-Preprocessing
 pdfplumber

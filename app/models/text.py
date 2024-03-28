@@ -34,14 +34,15 @@ def text_pipeline(text_file, filetype):
       tokenizer = pickle.load(t)
 
     tokenizer.fit_on_texts(text)
-    print('TOKENIZED')
     model_path = f'{BASE_DIR}/models_text/text_model.keras'
     model = load_model(model_path)
     sequences = tokenizer.texts_to_sequences(text)
     padded_sequences = pad_sequences(sequences, maxlen=1000, padding='post')
     AI_score = model.predict(padded_sequences)
-    print('THIS IS A PREDICTION')
     AI_score = np.average(AI_score)
-    return (AI_score > .5, AI_score, text)
+    AI_bool = AI_score > .5
+    if not AI_bool:
+     confidence = 1 - confidence
+    return (AI_bool, AI_score, text)
   #except:
     return (None, "")

@@ -22,15 +22,15 @@ def image_pipeline(image_file, filetype):
     img = preprocess_image(image_file)
     BASE_DIR = Path(__file__).resolve(strict=True).parent
     model_path = f'{BASE_DIR}/models_image/image_model.keras'
-    print(img.shape)
+
   # Predict using the model
 #  try:
     model = load_model(model_path)
-    #print(model.input)
-    print("loaded the model")
-    prediction = model.predict(img)
+    confidence = model.predict(img)
     # Convert predictions to binary
-    binary_predictions = prediction > 0.5
-    return binary_predictions, float(prediction)
+    AI_bool = confidence > 0.5
+    if not AI_bool:
+     confidence = 1 - confidence
+    return AI_bool, float(confidence)
 #  except:
     return (None, "")
