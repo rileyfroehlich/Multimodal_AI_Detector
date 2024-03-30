@@ -10,7 +10,7 @@
 <body>
     {% include "header.html" %}
 
-    <div class="container">
+    <div id="drop-area" class="container">
         <h1>Please Upload a File</h1>
         <h4>(max size: 500MB)</h4>
         <br>
@@ -24,52 +24,147 @@
             <button type="submit" id="uploadButton" class="button-like-link">Upload</button>
         </form>
     </div>
-<script>
-    function showFileName() {
+
+    <div id="loadingCircle" class="loading-circle"></div>
+    <div id="loadingOverlay" class="loading-overlay"></div>
+
+    {% include "footer.html" %}
+    <script>
+        const dropArea = document.getElementById('drop-area');
         const fileInput = document.getElementById('fileInput');
         const filePreview = document.getElementById('filePreview');
         const errorMessage = document.getElementById('error-message');
 
-        if (fileInput.files.length > 0) {
-            const fileName = fileInput.files[0].name;
-            filePreview.innerText = `Selected file: ${fileName}`;
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            dropArea.classList.add('highlight');
+        }
+
+        function unhighlight() {
+            dropArea.classList.remove('highlight');
+        }
+
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+
+            if (files.length > 1) {
+                alert('Please drop only one file.');
+                return;
+            }
+
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            const file = files[0];
+            const validFileTypes = ['txt', 'pdf', 'docx', 'jpg', 'jpeg', 'png', 'mp3', 'wav', 'm4a', 'flac'];
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+
+            if (!validFileTypes.includes(fileExtension)) {
+                errorMessage.innerText = 'Invalid file type. Please choose a valid file type.';
+                errorMessage.style.display = 'inline-block';
+                fileInput.innerText = '';
+                fileInput.style.display = 'none';
+                filePreview.innerText = '';
+                filePreview.style.display = 'none';
+                return;
+            }
+
+            if (file.size > 500 * 1024 * 1024) {
+                alert("File size exceeds the maximum limit of 500MB.");
+                fileInput.value = '';
+                errorMessage.innerText = 'Please select a smaller file.';
+                errorMessage.style.display = 'inline-block';
+                fileInput.innerText = '';
+                fileInput.style.display = 'none';
+                filePreview.innerText = '';
+                filePreview.style.display = 'none';
+                return;
+            }
+
+            uploadFile(file);
+        }
+
+        function uploadFile(file) {
+            const fileInput = document.getElementById('fileInput');
+            fileInput.files = new FileList([file]);
+            // Display file details in the UI
+            filePreview.innerText = `Selected file: ${file.name}`;
             filePreview.style.display = 'inline-block';
+            errorMessage.innerText = '';
             errorMessage.style.display = 'none';
-        } else {
-            filePreview.innerText = '';
-            filePreview.style.display = 'none';
-        }
-    }
-
-    function validateFileUpload() {
-        const fileInput = document.getElementById('fileInput');
-        const errorMessage = document.getElementById('error-message');
-
-        if (fileInput.files.length === 0) {
-            errorMessage.innerText = 'Please choose a file to upload.';
-            errorMessage.style.display = 'inline-block';
-            fileInput.innerText = '';
-            fileInput.style.display = 'none';
-
-            return false;
         }
 
-        const validFileTypes = ['txt', 'pdf', 'docx', 'jpg', 'jpeg', 'png', 'mp3', 'wav', 'm4a', 'flac'];
-        const fileExtension = fileInput.files[0].name.split('.').pop().toLowerCase();
+        function showFileName() {
+            const fileInput = document.getElementById('fileInput');
+            const filePreview = document.getElementById('filePreview');
+            const errorMessage = document.getElementById('error-message');
 
-        if (!validFileTypes.includes(fileExtension)) {
-            errorMessage.innerText = 'Invalid file type. Please choose a valid file type.';
-            errorMessage.style.display = 'inline-block';
-            fileInput.innerText = '';
-            fileInput.style.display = 'none';
-
-            return false;
+            if (fileInput.files.length > 0) {
+                const fileName = fileInput.files[0].name;
+                filePreview.innerText = `Selected file: ${fileName}`;
+                filePreview.style.display = 'inline-block';
+                errorMessage.style.display = 'none';
+            } else {
+                filePreview.innerText = '';
+                filePreview.style.display = 'none';
+            }
         }
 
-        return true;
-    }
+        function validateFileUpload() {
+            const fileInput = document.getElementById('fileInput');
+            const errorMessage = document.getElementById('error-message');
 
-    function checkFileSize(input) {
+            if (fileInput.files.length === 0) {
+                errorMessage.innerText = 'Please choose a file to upload.';
+                errorMessage.style.display = 'inline-block';
+                fileInput.innerText = '';
+                fileInput.style.display = 'none';
+
+                return false;
+            }
+
+            const validFileTypes = ['txt', 'pdf', 'docx', 'jpg', 'jpeg', 'png', 'mp3', 'wav', 'm4a', 'flac'];
+            const fileExtension = fileInput.files[0].name.split('.').pop().toLowerCase();
+
+            if (!validFileTypes.includes(fileExtension)) {
+                errorMessage.innerText = 'Invalid file type. Please choose a valid file type.';
+                errorMessage.style.display = 'inline-block';
+                fileInput.innerText = '';
+                fileInput.style.display = 'none';
+
+                return false;
+            }
+
+            const loadingCircle = document.getElementById('loadingCircle');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingCircle.style.display = 'block';
+            loadingOverlay.style.display = 'block';
+
+            return true;
+        }
+
+        function checkFileSize(input) {
             const fileInput = document.getElementById('fileInput');
             const errorMessage = document.getElementById('error-message');
             const filePreview = document.getElementById('filePreview');
@@ -84,8 +179,6 @@
                 fileInput.style.display = 'none';    
             }
         }
-</script>
-
-    {% include "footer.html" %}
+    </script>
 </body>
 </html>
