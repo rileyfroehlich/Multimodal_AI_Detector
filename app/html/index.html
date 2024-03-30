@@ -7,75 +7,70 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
-<body>
-    {% include "header.html" %}
+<body> 
+    <div id="fileDropArea" class="file-drop-area" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+        {% include "header.html" %}
 
-    <div id="drop-area" class="container">
-        <h1>Please Upload a File</h1>
-        <h4>(max size: 500MB)</h4>
-        <br>
-        <form id="uploadForm" method="post" enctype="multipart/form-data" action="/upload/" onsubmit="return validateFileUpload()">
-            <label for="fileInput" class="button-like-link">Choose File</label>
-            <input type="file" id="fileInput" name="file" accept=".txt, .pdf, .docx, .jpg, .jpeg, .png, .mp3, .wav, .m4a, .flac" onchange="showFileName(); checkFileSize(this);">
+        <div class="container">
+            <h1>Please Upload a File</h1>
+            <h4>(max size: 200MB)</h4>
             <br>
-            <div id="error-message" style="color: red; display: none;">Invalid file type. Please choose a valid file type.</div>
-            <div id="filePreview" style="display: none;"></div>
-            <br>
-            <button type="submit" id="uploadButton" class="button-like-link">Upload</button>
-        </form>
+            <form id="uploadForm" method="post" enctype="multipart/form-data" action="/upload/" onsubmit="return validateFileUpload()">
+                <label for="fileInput" class="button-like-link">Choose File</label>
+                <input type="file" id="fileInput" name="file" accept=".txt, .pdf, .docx, .jpg, .jpeg, .png, .mp3, .wav, .m4a, .flac" onchange="handleFileChange(this);">
+                <br>
+                <div id="error-message" style="color: red; display: none;">Invalid file type or size. Please choose a valid file.</div>
+                <div id="filePreview" style="display: none;"></div>
+                <br>
+                <button type="submit" id="uploadButton" class="button-like-link">Upload</button>
+            </form>
+        </div>
+
+
+        <div id="loadingCircle" class="loading-circle"></div>
+        <div id="loadingOverlay" class="loading-overlay"></div>
+
+        {% include "footer.html" %}
+
     </div>
-
-    <div id="loadingCircle" class="loading-circle"></div>
-    <div id="loadingOverlay" class="loading-overlay"></div>
-
-    {% include "footer.html" %}
     <script>
-        const dropArea = document.getElementById('drop-area');
-        const fileInput = document.getElementById('fileInput');
-        const filePreview = document.getElementById('filePreview');
-        const errorMessage = document.getElementById('error-message');
-
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropArea.addEventListener(eventName, preventDefaults, false);
-            document.body.addEventListener(eventName, preventDefaults, false);
-        });
-
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropArea.addEventListener(eventName, highlight, false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropArea.addEventListener(eventName, unhighlight, false);
-        });
-
-        function highlight() {
+        function handleDragOver(event) {
+            event.preventDefault();
+            const dropArea = document.getElementById('fileDropArea');
             dropArea.classList.add('highlight');
         }
 
-        function unhighlight() {
+        function handleDragLeave(event) {
+            const dropArea = document.getElementById('fileDropArea');
             dropArea.classList.remove('highlight');
         }
 
-        dropArea.addEventListener('drop', handleDrop, false);
+        function handleDrop(event) {
+            event.preventDefault();
+            const dropArea = document.getElementById('fileDropArea');
+            dropArea.classList.remove('highlight');
 
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
+            const dt = event.dataTransfer;
             const files = dt.files;
+
+            handleFiles(files);
+        }
+
+        function handleFileChange(input) {
+            const files = input.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            const fileInput = document.getElementById('fileInput');
+            const filePreview = document.getElementById('filePreview');
+            const errorMessage = document.getElementById('error-message');
 
             if (files.length > 1) {
                 alert('Please drop only one file.');
                 return;
             }
 
-            handleFiles(files);
-        }
-
-        function handleFiles(files) {
             const file = files[0];
             const validFileTypes = ['txt', 'pdf', 'docx', 'jpg', 'jpeg', 'png', 'mp3', 'wav', 'm4a', 'flac'];
             const fileExtension = file.name.split('.').pop().toLowerCase();
@@ -90,8 +85,8 @@
                 return;
             }
 
-            if (file.size > 500 * 1024 * 1024) {
-                alert("File size exceeds the maximum limit of 500MB.");
+            if (file.size > 200 * 1024 * 1024) {
+                alert("File size exceeds the maximum limit of 200MB.");
                 fileInput.value = '';
                 errorMessage.innerText = 'Please select a smaller file.';
                 errorMessage.style.display = 'inline-block';
@@ -102,12 +97,9 @@
                 return;
             }
 
-            uploadFile(file);
-        }
-
-        function uploadFile(file) {
-            const fileInput = document.getElementById('fileInput');
-            fileInput.files = new FileList([file]);
+            // Add file to the file input of the form
+            const newFileList = createFileList(file);
+            fileInput.files = newFileList;
             // Display file details in the UI
             filePreview.innerText = `Selected file: ${file.name}`;
             filePreview.style.display = 'inline-block';
@@ -115,21 +107,12 @@
             errorMessage.style.display = 'none';
         }
 
-        function showFileName() {
-            const fileInput = document.getElementById('fileInput');
-            const filePreview = document.getElementById('filePreview');
-            const errorMessage = document.getElementById('error-message');
-
-            if (fileInput.files.length > 0) {
-                const fileName = fileInput.files[0].name;
-                filePreview.innerText = `Selected file: ${fileName}`;
-                filePreview.style.display = 'inline-block';
-                errorMessage.style.display = 'none';
-            } else {
-                filePreview.innerText = '';
-                filePreview.style.display = 'none';
-            }
+        function createFileList(...files) {
+            const fileList = new ClipboardEvent('').clipboardData || new DataTransfer();
+            files.forEach(file => fileList.items.add(file));
+            return fileList.files;
         }
+
 
         function validateFileUpload() {
             const fileInput = document.getElementById('fileInput');
@@ -169,9 +152,9 @@
             const errorMessage = document.getElementById('error-message');
             const filePreview = document.getElementById('filePreview');
 
-            // Check if the file size exceeds 500MB (500 * 1024 * 1024 bytes)
-            if (input.files[0] && input.files[0].size > 500 * 1024 * 1024) {
-                alert("File size exceeds the maximum limit of 500MB.");
+            // Check if the file size exceeds 200MB (500 * 1024 * 1024 bytes)
+            if (input.files[0] && input.files[0].size > 200 * 1024 * 1024) {
+                alert("File size exceeds the maximum limit of 200MB.");
                 input.value = '';
                 errorMessage.innerText = 'Please select a smaller file.';
                 errorMessage.style.display = 'inline-block';
@@ -179,6 +162,25 @@
                 fileInput.style.display = 'none';    
             }
         }
+
+               // Function to handle file submission
+        function handleFileSubmit(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Call validateFileUpload to perform validation
+            if (!validateFileUpload()) {
+                return; // Validation failed, do not proceed with form submission
+            }
+
+            // Form validation passed, submit the form programmatically
+            const form = document.getElementById('uploadForm');
+            form.submit();
+        }
+
+        // Add event listener for form submission
+        const uploadForm = document.getElementById('uploadForm');
+        uploadForm.addEventListener('submit', handleFileSubmit);
+
     </script>
 </body>
 </html>
