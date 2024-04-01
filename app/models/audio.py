@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import librosa
 import wave
-from tensorflow.keras.models import load_model
+import pickle
 import soundfile as sf
 from pydub import AudioSegment
 from pathlib import Path
@@ -137,15 +137,20 @@ def audio_detection(file, filetype):
 
   #Load model
   BASE_DIR = Path(__file__).resolve(strict=True).parent
-  model_path = f'{BASE_DIR}/models_audio/audio_detector_lstm_model.keras'
+  model_path = f'{BASE_DIR}/models_audio/audio_random_forest_model.pkl'
   
-  model = load_model(model_path)
+  with open(model_path, 'rb') as file:
+    model = pickle.load(file)
 
   #Predict with model
-  confidence = model.predict(extracted_audio_df)
-  AI_bool = np.average(confidence) > .5
-  print(confidence)
-  if not AI_bool:
+  prediction = model.predict(extracted_audio_df)
+  confidence = (model.predict_proba(extracted_audio_df))[0][0]
+  AI_bool = prediction > .5
+
+  if AI_bool:
      confidence = 1 - confidence
+
+  if confidence == .5:
+    confidence =.51
 
   return AI_bool, float(confidence)
