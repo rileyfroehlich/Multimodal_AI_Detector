@@ -38,7 +38,7 @@ def text_pipeline(text_file, filetype):
     model = load_model(model_path)
     sequences = tokenizer.texts_to_sequences(text)
     padded_sequences = pad_sequences(sequences, maxlen=1000, padding='post')
-    reshaped_data = padded_sequence.reshape(1, padded_sequence.shape[1], 1)
+    reshaped_data = padded_sequences.reshape(1, padded_sequences.shape[1], 1)
     confidence = model.predict(reshaped_data)
     AI_bool = confidence > .5
     if not AI_bool:
