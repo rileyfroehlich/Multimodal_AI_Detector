@@ -36,9 +36,9 @@ def text_pipeline(text_file, filetype):
     tokenizer.fit_on_texts(text)
     model_path = f'{BASE_DIR}/models_text/text_model_final.keras'
     model = load_model(model_path)
-    sequence = tokenizer.texts_to_sequences(text)
+    sequence = tokenizer.texts_to_sequences([text])
     padded_sequence = pad_sequences(sequence, maxlen=1000, padding='post')
-    confidence = model.predict(np.expand_dims(padded_sequence, 0))
+    confidence = model.predict(padded_sequence)
     AI_bool = confidence > .5
     if not AI_bool:
      confidence = 1 - confidence
