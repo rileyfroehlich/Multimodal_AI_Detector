@@ -40,4 +40,4 @@ def text_pipeline(text_file, filetype):
     AI_bool = confidence > .5
     if not AI_bool:
      confidence = 1 - confidence
-    return (AI_bool, confidence, text)
+    return (AI_bool, float(confidence), text)
