@@ -32,8 +32,6 @@ def text_pipeline(text_file, filetype):
     tokenizer_path = f'{BASE_DIR}/models_text/text_pretrained_tokenizer.pkl'
     with open(tokenizer_path, 'rb') as t:
       tokenizer = pickle.load(t)
-
-    tokenizer.fit_on_texts(text)
     model_path = f'{BASE_DIR}/models_text/text_model_final.keras'
     model = load_model(model_path)
     sequence = tokenizer.texts_to_sequences([text])
