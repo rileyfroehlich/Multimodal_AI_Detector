@@ -234,7 +234,6 @@ a.button-like-link:hover {
 
 .footer a {
     color: #fff; /* Link text color */
-    text-decoration: none; /* Remove underline */
 }
 
 .about-link {
@@ -264,6 +263,7 @@ a.names:hover {
     max-width: 600px;
     margin: 0 auto; /* Center the container itself */
     padding: 20px;
+    text-decoration: none; /* Remove underline */
 }
 
 .footer-about {
